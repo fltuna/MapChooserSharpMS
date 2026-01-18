@@ -41,7 +41,12 @@ public enum RtvExecutionResult
     DisallowedByExternalConsumer,
     
     /// <summary>
-    /// If RTV is already triggered, we don't need to do anything
+    /// If RTV is already triggered and waiting for vote start.
     /// </summary>
-    RtvTriggeredAlready,
+    TriggeredWaitingForVote,
+    
+    /// <summary>
+    /// If RTV is already triggered and waiting for map change.
+    /// </summary>
+    TriggeredWaitingForMapTransition,
 }

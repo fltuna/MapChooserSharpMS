@@ -8,7 +8,7 @@ namespace MapChooserSharpMS.Shared.Events.RockTheVote.Params;
 public interface IClientRtvUnCastParams: IEventBaseParams, IEnforceableEvent
 {
     /// <summary>
-    /// Client who cast rtv.
+    /// Client who uncast rtv.
     /// </summary>
     IGameClient Client { get; }
 }

@@ -10,13 +10,28 @@ public interface IRtvService
     /// <param name="client"></param>
     /// <returns>Client's RTV result</returns>
     RtvExecutionResult AddClientToRtv(IGameClient client);
+    
+    /// <summary>
+    /// Add player to RTV participant
+    /// </summary>
+    /// <param name="slot"></param>
+    /// <returns>Client's RTV result</returns>
+    RtvExecutionResult AddClientToRtv(int slot);
 
     /// <summary>
     /// Remove player from RTV participant
     /// </summary>
     /// <param name="client"></param>
+    /// <param name="enforcer"></param>
     /// <returns></returns>
-    RtvExecutionResult RemoveClientFromRtv(IGameClient client);
+    bool RemoveClientFromRtv(IGameClient client, IGameClient? enforcer = null);
+
+    /// <summary>
+    /// Remove player from RTV participant
+    /// </summary>
+    /// <param name="slot"></param>
+    /// <returns></returns>
+    bool RemoveClientFromRtv(int slot);
     
     /// <summary>
     /// Initiate a rtv vote

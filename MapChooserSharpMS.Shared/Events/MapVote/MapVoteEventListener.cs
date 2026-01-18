@@ -18,6 +18,8 @@ public interface IMapVoteEventListener: IEventListenerBase
     List<IMapConfig> OnRandomMapPick(IMapVoteRandomMapPickParams @params)
         => [];
     
+    void OnMapVoteFinished(IMapVoteFinishedEventParams @params) {}
+    
     void OnMapVoteCancelled(IMapVoteCancelledParams @params) {}
     
     void OnMapExtended(IMapVoteExtendParams @params) {}
