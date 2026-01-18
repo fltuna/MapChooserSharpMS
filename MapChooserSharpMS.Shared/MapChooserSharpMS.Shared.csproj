@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\config.props" />
+
+    <PropertyGroup>
+        <AssemblyName>MapChooserSharpMS.Shared</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ModSharp.Sharp.Shared" Version="2.1.79" ExcludeAssets="runtime" />
+        <PackageReference Include="TnmsPluginFoundation" Version="0.0.6" ExcludeAssets="runtime" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="MapCycle\Managers\" />
+    </ItemGroup>
+  
+</Project>

@@ -1,0 +1,28 @@
+﻿using System.Collections.Generic;
+
+namespace MapChooserSharpMS.Shared.RtvController.Managers;
+
+public interface IRtvManager
+{
+    /// <summary>
+    /// Describes current status of RTV
+    /// </summary>
+    RtvStatus RtvStatus { get; }
+    
+    /// <summary>
+    /// Time to be RTV command unlocked to players <br/>
+    /// You can get remaining time in seconds by `RtvCommandUnlockTime - ISharedSystem.GetModSharp().EngineTime()`
+    /// </summary>
+    float RtvCommandUnlockTime { get; }
+    
+    int RtvCounts { get; }
+    
+    int RequiredCounts { get; }
+    
+    float RtvCompletionRatio { get; }
+    
+    /// <summary>
+    /// User slot of RTV participants
+    /// </summary>
+    ISet<int> RtvParticipants { get; }
+}
