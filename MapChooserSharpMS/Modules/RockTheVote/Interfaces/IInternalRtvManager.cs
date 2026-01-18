@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using MapChooserSharpMS.Shared.RtvController;
-using MapChooserSharpMS.Shared.RtvController.Managers;
+using MapChooserSharpMS.Shared.RockTheVote;
+using MapChooserSharpMS.Shared.RockTheVote.Managers;
 using Sharp.Shared.Objects;
 
-namespace MapChooserSharpMS.Modules.RtvController.Interfaces;
+namespace MapChooserSharpMS.Modules.RockTheVote.Interfaces;
 
 internal interface IInternalRtvManager: IRtvManager
 {

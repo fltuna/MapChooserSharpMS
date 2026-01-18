@@ -1,9 +1,8 @@
 ﻿using MapChooserSharpMS.Shared.Events.RockTheVote;
-using MapChooserSharpMS.Shared.RtvController.Managers;
-using MapChooserSharpMS.Shared.RtvController.Services;
-using Sharp.Shared.Objects;
+using MapChooserSharpMS.Shared.RockTheVote.Managers;
+using MapChooserSharpMS.Shared.RockTheVote.Services;
 
-namespace MapChooserSharpMS.Shared.RtvController;
+namespace MapChooserSharpMS.Shared.RockTheVote;
 
 /// <summary>
 /// RTV Controller API

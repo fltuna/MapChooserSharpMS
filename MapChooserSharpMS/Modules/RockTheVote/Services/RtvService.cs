@@ -1,20 +1,18 @@
 using System;
 using MapChooserSharpMS.Modules.EventManager;
 using MapChooserSharpMS.Modules.EventManager.Events.RockTheVote;
-using MapChooserSharpMS.Modules.PluginConfig.Interfaces;
-using MapChooserSharpMS.Modules.RtvController.Interfaces;
-using MapChooserSharpMS.Modules.RtvController.Managers;
+using MapChooserSharpMS.Modules.RockTheVote.Interfaces;
+using MapChooserSharpMS.Modules.RockTheVote.Managers;
 using MapChooserSharpMS.Shared.Events.RockTheVote;
 using MapChooserSharpMS.Shared.Events.RockTheVote.Params;
-using MapChooserSharpMS.Shared.RtvController;
-using MapChooserSharpMS.Shared.RtvController.Services;
+using MapChooserSharpMS.Shared.RockTheVote;
+using MapChooserSharpMS.Shared.RockTheVote.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Sharp.Shared.Objects;
 using Sharp.Shared.Units;
 using TnmsPluginFoundation;
-using TnmsPluginFoundation.Models.Plugin;
 
-namespace MapChooserSharpMS.Modules.RtvController.Services;
+namespace MapChooserSharpMS.Modules.RockTheVote.Services;
 
 internal sealed class RtvService(
     TnmsPlugin plugin,

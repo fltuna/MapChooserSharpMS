@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MapChooserSharpMS.Shared.RtvController.Managers;
+namespace MapChooserSharpMS.Shared.RockTheVote.Managers;
 
 public interface IRtvManager
 {

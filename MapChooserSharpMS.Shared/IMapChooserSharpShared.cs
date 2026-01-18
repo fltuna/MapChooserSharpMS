@@ -3,7 +3,7 @@ using MapChooserSharpMS.Shared.MapConfig;
 using MapChooserSharpMS.Shared.MapCycleController;
 using MapChooserSharpMS.Shared.MapVote;
 using MapChooserSharpMS.Shared.Nomination;
-using MapChooserSharpMS.Shared.RtvController;
+using MapChooserSharpMS.Shared.RockTheVote;
 
 namespace MapChooserSharpMS.Shared;
 

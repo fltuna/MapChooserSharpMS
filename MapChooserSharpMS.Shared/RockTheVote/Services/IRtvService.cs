@@ -1,6 +1,6 @@
 ﻿using Sharp.Shared.Objects;
 
-namespace MapChooserSharpMS.Shared.RtvController.Services;
+namespace MapChooserSharpMS.Shared.RockTheVote.Services;
 
 public interface IRtvService
 {

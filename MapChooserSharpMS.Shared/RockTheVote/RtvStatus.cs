@@ -1,4 +1,4 @@
-﻿namespace MapChooserSharpMS.Shared.RtvController;
+﻿namespace MapChooserSharpMS.Shared.RockTheVote;
 
 /// <summary>
 /// Status of RTV

@@ -1,4 +1,4 @@
-﻿namespace MapChooserSharpMS.Shared.RtvController;
+﻿namespace MapChooserSharpMS.Shared.RockTheVote;
 
 /// <summary>
 /// Result of player rtv execution

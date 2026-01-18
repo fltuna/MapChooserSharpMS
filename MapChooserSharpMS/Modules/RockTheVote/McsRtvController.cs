@@ -1,23 +1,23 @@
 using System;
 using MapChooserSharpMS.Modules.EventManager;
 using MapChooserSharpMS.Modules.PluginConfig.Interfaces;
-using MapChooserSharpMS.Modules.RtvController.Interfaces;
-using MapChooserSharpMS.Modules.RtvController.Managers;
-using MapChooserSharpMS.Modules.RtvController.Services;
+using MapChooserSharpMS.Modules.RockTheVote.Interfaces;
+using MapChooserSharpMS.Modules.RockTheVote.Managers;
+using MapChooserSharpMS.Modules.RockTheVote.Services;
 using MapChooserSharpMS.Shared.Events.MapCycle;
 using MapChooserSharpMS.Shared.Events.MapVote;
 using MapChooserSharpMS.Shared.Events.MapVote.Params;
 using MapChooserSharpMS.Shared.Events.RockTheVote;
-using MapChooserSharpMS.Shared.RtvController;
-using MapChooserSharpMS.Shared.RtvController.Managers;
-using MapChooserSharpMS.Shared.RtvController.Services;
+using MapChooserSharpMS.Shared.RockTheVote.Managers;
+using MapChooserSharpMS.Shared.RockTheVote.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Sharp.Shared.Listeners;
 using TnmsPluginFoundation.Models.Plugin;
 
-namespace MapChooserSharpMS.Modules.RtvController;
+namespace MapChooserSharpMS.Modules.RockTheVote;
 
 internal sealed class McsRtvController(IServiceProvider serviceProvider, bool hotReload)
-    : PluginModuleBase(serviceProvider, hotReload), IMcsInternalRtvController, IMapVoteEventListener, IMapCycleEventListener
+    : PluginModuleBase(serviceProvider, hotReload), IMcsInternalRtvController, IMapVoteEventListener, IMapCycleEventListener, IGameListener
 {
     public override string PluginModuleName => "McsRtvController";
     public override string ModuleChatPrefix => "Prefix.Rtv";
@@ -73,9 +73,16 @@ internal sealed class McsRtvController(IServiceProvider serviceProvider, bool ho
         _rtvService.RemoveClientFromRtv(slot);
     }
 
+
+    public int ListenerVersion => 1;
     public int ListenerPriority => 9999999;
 
     public void OnMapVoteFinished(IMapVoteFinishedEventParams @params)
+    {
+        ResetRtvState();
+    }
+
+    public void OnGameActivate()
     {
         ResetRtvState();
     }
