@@ -1,0 +1,186 @@
+
+[MapChooserSharpSettings.Default]
+# These are default value for map settings.
+# You can modify these section, but do not remove.
+MapNameAlias = ""
+MapDescription = ""
+IsDisabled = false
+WorkshopId = 0
+OnlyNomination = false
+Cooldown = 0
+MaxExtends = 3
+MaxExtCommandUses = 1
+ExtendTimePerExtends = 15
+MapTime = 20
+ExtendRoundsPerExtends = 5
+MapRounds = 10
+RequiredPermissions = []
+RestrictToAllowedUsersOnly = false
+AllowedSteamIds = []
+DisallowedSteamIds = []
+MaxPlayers = 0
+MinPlayers = 0
+ProhibitAdminNomination = false
+DaysAllowed = []
+AllowedTimeRanges = []
+
+
+
+
+# ==============================================================
+# Full configuration example
+# ==============================================================
+
+# Full configuration
+[ze_example_abc]
+
+# ===== Basic Map Settings =====
+
+# If set, it will display this string instead of map name
+MapNameAlias = "ze example a b c"
+
+# If set, it will display this string when vote finished, and before map transition
+MapDescription = "Let's play ze_example_abc!"
+
+# If set, the map cannot be nominated even if admin
+# Default value is disabled
+IsDisabled = false
+
+# If set, this map recognized as workshop map
+WorkshopId = 1234567891234
+
+# If set, the map will not included in random vote pick
+OnlyNomination = false
+
+# Cooldown for this map, specify with hours
+Cooldown = 60
+
+# Cooldown time for this map, specify with the datetime suffix
+# This will be applied with when normal cooldown applies, but differences is this just requires specified times elapsed.
+# You can use, "d" (day), "m" (month), If you don't want to apply it, then leave it blank 
+CooldownDateTime = "2d"
+
+# Max extends
+MaxExtends = 3
+
+# Max !ext command uses
+MaxExtCommandUses = 1
+
+# Extend time per extend (minutes)
+ExtendTimePerExtends = 15
+
+# If cycle is round based
+# How many rounds extended in per extend?
+# ExtendRoundsPerExtends = 5
+
+# ===== Nomination Settings =====
+
+# If this value is set, nominator should have specified permission
+RequiredPermissions = ["css/generic"]
+
+# Restrict nomination to user who in the AllowedSteamIds
+RestrictToAllowedUsersOnly = false
+
+# If this value(s) is set, Allowed clients are able to bypasses the permission check
+# But, cannot bypass check if ProhibitAdminNomination is true and user is not a root user.
+AllowedSteamIds = [987654321]
+
+# If this value(s) is set, Disallowed clients are not able to nominate this map
+DisallowedSteamIds = [123456789]
+
+# Max players requires to nominate this map
+MaxPlayers = 64
+
+# Minimal players requires to nominate this map
+MinPlayers = 10
+
+# Make only server console can nominate this map
+ProhibitAdminNomination = false
+
+# If this value(s) are set, the nomination will be restricted to these days.
+# Also, if DaysAllowed is set, the check will be combined.
+DaysAllowed = ["wednesday", "monday"]
+
+# If this value(s) are set, the nomination will be restricted to these time ranges.
+# Also, if DaysAllowed is set, the check will be combined.
+AllowedTimeRanges = ["10:00-12:00", "20:00-22:00", "22:00-03:00"]
+
+
+# Extra configuration for external plugin
+[ze_example_abc.extra.shop]
+cost = 100
+
+
+# ==============================================================
+# Minimal configuration example
+# ==============================================================
+
+# Minimal configuration....... Yes you can define simply!
+# This will uses default value from [MapChooserSharpSettings.Default] section
+[ze_example_xyz]
+
+
+
+
+# ==============================================================
+# Group configuration example
+# ==============================================================
+
+# Configuration with groups
+# By assigning this group to the map's GroupSettings, the group's setting values can be treated as the map's default settings values.
+[MapChooserSharpSettings.Groups.HardZeMap]
+# Cooldown is are special value.
+Cooldown = 30
+
+OnlyNomination = true
+DaysAllowed = ["saturday", "sunday"]
+AllowedTimeRanges = ["18:00-00:00"]
+
+# Yes! you can still define extra configuration for external plugin even if in group settings!
+[MapChooserSharpSettings.Groups.HardZeMap.extra.shop]
+cost = 100
+
+
+[ze_example_123]
+# If this is set, we will use group settings.
+# If there is no matched group, it will silently ignored.
+GroupSettings = ["HardZeMap"]
+
+# But if we set value in map settings and already defined in group, it will override group settings.
+OnlyNomination = false
+
+# But cooldown is are individual
+# If
+Cooldown = 60
+
+
+
+# ==============================================================
+# Adding multiple groups to map group
+# ==============================================================
+
+[MapChooserSharpSettings.Groups.Group1]
+RequiredPermissions = ["css/root"]
+AllowedTimeRanges = ["18:00-00:00"]
+MaxPlayers = 1000
+AllowedSteamIds = [987654321]
+DisallowedSteamIds = [987654321]
+
+
+[MapChooserSharpSettings.Groups.Group2]
+RequiredPermissions = ["css/generic"]
+DaysAllowed = ["saturday", "sunday"]
+MinPlayers = 300
+AllowedSteamIds = [123456789]
+DisallowedSteamIds = [123456789]
+
+
+
+[ze_example_789]
+# If there are multiple groups and the values of the groups are the same, the value of the first group specified takes precedence.
+# In the following example, Group1 has the highest priority and RequiredPermissions is "css/root".
+#
+# But AllowedSteamIds and DisallowedSteamIds are exceptional.
+# All AllowedSteamIds and DisallowedSteamIds will combined to 1 array. this is intended for grouping the special user
+#
+GroupSettings = ["Group1", "Group2"]

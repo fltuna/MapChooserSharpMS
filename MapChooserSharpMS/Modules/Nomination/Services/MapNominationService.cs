@@ -29,8 +29,8 @@ internal sealed class MapNominationService(
     public NominationCheckResult TryNominateMap(IGameClient nominator, IMapConfig mapConfig)
     {
         var result = nominationValidator.PlayerCanNominateMap(nominator, mapConfig);
-        
-        if (result != NominationCheckResult.Success)
+
+        if (result != NominationCheckResult.None)
             return result;
         
         if (!nominationManager.NominatedMaps.TryGetValue(mapConfig.MapName, out var nomination))
@@ -74,33 +74,12 @@ internal sealed class MapNominationService(
         
         nomination.NominationParticipants.Add(nominator.Slot);
         
-        return NominationCheckResult.Success;
-    }    
-    
+        return NominationCheckResult.None;
+    }
+
     public NominationCheckResult TryAdminNominateMap(IGameClient? nominator, IMapConfig mapConfig)
     {
-        if (!nominationManager.NominatedMaps.TryGetValue(mapConfig.MapName, out var nomination))
-        {
-            var newNom = new McsNominationData(mapConfig);
-
-            if (!nominationManager.AddNomination(newNom))
-                throw new InvalidOperationException("Failed to add nomination as a admin");
-            
-            nomination = newNom;
-        }
-        
-        if (nomination.IsForceNominated)
-            return NominationCheckResult.NominatedByAdmin;
-        
-        nomination.IsForceNominated = true;
-
-
-        var nominationParam = ActivatorUtilities.CreateInstance<AdminNominationEventParams>(provider, nominationController, nomination);
-
-        if (eventManager.FireCancellable<INominationEventListener>(evt => evt.OnAdminNomination(nominationParam)))
-            return NominationCheckResult.CancelledByExternalPlugin;
-        
-        return NominationCheckResult.Success;
+        throw new NotImplementedException();
     }
 
     public bool TryRemoveNomination(IMapConfig mapConfig, IGameClient? executor = null, bool forceRemoval = false)
