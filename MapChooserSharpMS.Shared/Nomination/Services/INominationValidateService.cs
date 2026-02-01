@@ -16,7 +16,7 @@ public interface INominationValidateService
     
     /// <summary>
     /// Usually used for random map picking <br/>
-    /// Main differences between PlayerCanNominateMap and this is a just check player dependent check or not.
+    /// This method will ignore the player based check such as permission.
     /// </summary>
     /// <param name="mapConfig"></param>
     /// <returns></returns>
@@ -48,7 +48,7 @@ public interface INominationValidateService
     
     bool IsRestrictedToCertainUser(IMapConfig mapConfig);
     
-    bool HasMapInCoolDown(IMapConfig mapConfig);
+    bool IsMapInCooldown(IMapConfig mapConfig);
     
     bool HasReachedGroupNominationLimit(IMapConfig mapConfig);
 
@@ -63,5 +63,5 @@ public interface INominationValidateService
     /// <returns></returns>
     NominationCheckResult GetNominationState(IMapConfig mapConfig, IGameClient? client = null);
     
-    IDetailedCooldownResult GetCooldown(IMapConfig mapConfig);
+    IDetailedCooldownResult GetCooldownInformations(IMapConfig mapConfig);
 }

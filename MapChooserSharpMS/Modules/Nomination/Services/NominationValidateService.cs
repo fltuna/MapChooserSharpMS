@@ -61,7 +61,7 @@ internal sealed class NominationValidateService
             return NominationCheckResult.VotingPeriod;
 
         
-        if (HasMapInCoolDown(mapConfig))
+        if (IsMapInCooldown(mapConfig))
             return NominationCheckResult.MapIsInCooldown;
 
         SteamID steamId = client.SteamId;
@@ -93,6 +93,13 @@ internal sealed class NominationValidateService
 
         if (!IsWithinTimeRange(mapConfig))
             return NominationCheckResult.OnlySpecificTime;
+
+        var nominationEvent = ActivatorUtilities.CreateInstance<NominationCheckPassedEventParams>(ServiceProvider, _nominationController);
+        if (_eventManager.FireCancellable<INominationEventListener>(evt =>
+                evt.OnNominationCheckPassed(nominationEvent)))
+        {
+            return NominationCheckResult.CancelledByExternalPlugin;
+        }
         
         return NominationCheckResult.Success;
     }
@@ -113,7 +120,7 @@ internal sealed class NominationValidateService
             return NominationCheckResult.GroupNominationLimitReached;
 
         
-        if (HasMapInCoolDown(mapConfig))
+        if (IsMapInCooldown(mapConfig))
             return NominationCheckResult.MapIsInCooldown;
         
         if (IsRestrictedToCertainUser(mapConfig))
@@ -229,9 +236,9 @@ internal sealed class NominationValidateService
         return mapConfig.NominationConfig.RestrictToAllowedUsersOnly;
     }
 
-    public bool HasMapInCoolDown(IMapConfig mapConfig)
+    public bool IsMapInCooldown(IMapConfig mapConfig)
     {
-        return GetCooldown(mapConfig).HighestCooldown > 0;
+        return GetCooldownInformations(mapConfig).HasCooldown;
     }
 
 
@@ -256,17 +263,20 @@ internal sealed class NominationValidateService
         throw new InvalidOperationException("Failed to check nomination existence, this shouldn't be happened!");
     }
 
-    public IDetailedCooldownResult GetCooldown(IMapConfig mapConfig)
+    public IDetailedCooldownResult GetCooldownInformations(IMapConfig mapConfig)
     {
         int curMapCooldown = mapConfig.CooldownConfig.CurrentCooldown;
+        var curMapTimedCooldown = mapConfig.CooldownConfig.LastPlayedAt + mapConfig.CooldownConfig.TimedCooldown;
         Dictionary<string, int> groupCooldown = new Dictionary<string, int>();
+        Dictionary<string, DateTime> groupTimedCooldown = new ();
         
         foreach (IMapGroupConfig groupSetting in mapConfig.GroupSettings)
         {
             groupCooldown[groupSetting.GroupName] = groupSetting.CooldownConfig.CurrentCooldown;
+            groupTimedCooldown[groupSetting.GroupName] = groupSetting.CooldownConfig.LastPlayedAt + groupSetting.CooldownConfig.TimedCooldown;
         }
-
-        return new DetailedCooldownResult(mapConfig, curMapCooldown, groupCooldown);
+        
+        return new DetailedCooldownResult(mapConfig, curMapCooldown, groupCooldown, curMapTimedCooldown, groupTimedCooldown);
     }
 
     public bool HasReachedGroupNominationLimit(IMapConfig mapConfig)

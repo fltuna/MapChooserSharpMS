@@ -9,16 +9,24 @@ namespace MapChooserSharpMS.Modules.Nomination.Models;
 public class DetailedCooldownResult
     : IDetailedCooldownResult
 {
-    public DetailedCooldownResult(IMapConfig mapConfig, int mapCooldown, Dictionary<string, int> groupCooldown)
+    public DetailedCooldownResult(IMapConfig mapConfig, int mapCooldown, Dictionary<string, int> groupCooldown, DateTime timedCooldown, IReadOnlyDictionary<string, DateTime> groupTimedCooldowns)
     {
         MapConfig = mapConfig;
-        MapCooldown = mapCooldown;
+        CooldownCount = mapCooldown;
         GroupCooldowns = groupCooldown;
-        HighestCooldown = Math.Max(mapCooldown, groupCooldown.Values.MaxBy(t => t));
+        HighestCooldownCount = groupCooldown.Values.Append(mapCooldown).Max();
+        LongestTimedCooldown = groupTimedCooldowns.Values.Append(timedCooldown).Max();
+        TimedCooldown = timedCooldown;
+        GroupTimedCooldowns = groupTimedCooldowns;
+        HasCooldown = HighestCooldownCount > 0 || LongestTimedCooldown.Second > 0;
     }
-    
-    public int HighestCooldown { get; }
+
+    public bool HasCooldown { get; }
+    public int HighestCooldownCount { get; }
+    public DateTime LongestTimedCooldown { get; }
     public IMapConfig MapConfig { get; }
-    public int MapCooldown { get; }
-    public Dictionary<string, int> GroupCooldowns { get; }
+    public int CooldownCount { get; }
+    public DateTime TimedCooldown { get; }
+    public IReadOnlyDictionary<string, int> GroupCooldowns { get; }
+    public IReadOnlyDictionary<string, DateTime> GroupTimedCooldowns { get; }
 }

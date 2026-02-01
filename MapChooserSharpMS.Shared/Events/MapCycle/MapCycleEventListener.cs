@@ -48,4 +48,10 @@ public interface IMapCycleEventListener : IEventListenerBase
     /// Fired when going to intermission state
     /// </summary>
     void OnMcsIntermission(IMcsIntermissionParams @params) {}
+    
+    // TODO() make to non void. make cancellable and make new cooldown obtainable in MCS
+    /// <summary>
+    /// Fired when MCS about to apply map cooldown
+    /// </summary>
+    void OnMapCooldownApply(IMapCooldownApplyEventParams eventParams) {}
 }
