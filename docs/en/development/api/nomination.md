@@ -76,6 +76,7 @@ Service exposing individual validation conditions. Provides both composite check
 | `IsGreaterThanMinPlayers(IMapConfig)` | `bool` | Whether the current player count meets the minimum |
 | `IsLowerThanMaxPlayers(IMapConfig)` | `bool` | Whether the current player count is below the maximum |
 | `IsMapInCooldown(IMapConfig)` | `bool` | Whether the map is on cooldown |
+| `SharesCooldownGroupWithCurrentMap(IMapConfig)` | `bool` | Whether the map shares a cooldown-enabled group (config `Cooldown` > 0 or `CooldownDateTime` set) with the currently playing map. Returns `false` for the current map itself (covered by `IsCurrentMap`) |
 | `IsMapInNominationCooldown(IMapConfig)` | `bool` | Whether the map is on nomination-specific cooldown |
 | `IsPlayerInNominationCooldown(ulong)` | `bool` | Whether the player (by SteamID) is on per-player nomination cooldown |
 | `GetPlayerCooldownState(ulong)` | `IPlayerNominationCooldownState?` | Returns the player's nomination cooldown state, or `null` if not on cooldown |
@@ -173,6 +174,7 @@ Enum representing reasons why a nomination was rejected. Methods like `TryNomina
 | `CancelledByExternalPlugin` | Cancelled by an external plugin's event listener |
 | `ProhibitAdminNomination` | Admin nomination is prohibited for this map in its configuration |
 | `PlayerCooldownActive` | The player is on per-player nomination cooldown |
+| `SameMapGroup` | The map shares a cooldown-enabled group with the currently playing map |
 
 ---
 

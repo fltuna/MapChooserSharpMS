@@ -52,6 +52,21 @@ public interface INominationValidateService
 
     bool IsMapInCooldown(IMapConfig mapConfig);
 
+    /// <summary>
+    /// Checks whether the given map shares a cooldown-enabled group with the
+    /// currently playing map.<br/>
+    /// A group is cooldown-enabled when its config defines
+    /// <see cref="IMcsCooldownSettings.ConfigCooldown"/> &gt; 0 or a
+    /// <see cref="IMcsCooldownSettings.TimedCooldown"/>. The played map's group
+    /// cooldown is only written to the store at map end, so without this check
+    /// same-group maps would pass cooldown validation during the current map's
+    /// vote/nomination window.<br/>
+    /// Returns false when the target map is the current map itself
+    /// (covered by <see cref="IsCurrentMap"/>) or when the current map has no
+    /// resolvable config.
+    /// </summary>
+    bool SharesCooldownGroupWithCurrentMap(IMapConfig mapConfig);
+
     bool IsMapInNominationCooldown(IMapConfig mapConfig);
 
     bool IsPlayerInNominationCooldown(ulong steamId);

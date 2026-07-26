@@ -22,4 +22,5 @@ public enum NominationCheckResult
     CancelledByExternalPlugin,
     ProhibitAdminNomination,
     PlayerCooldownActive,
+    SameMapGroup,
 }

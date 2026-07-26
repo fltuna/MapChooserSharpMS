@@ -82,6 +82,7 @@
     "Nomination.Notification.Failure.AlreadyNominatedSameMap": "既に {lime}{0}{default} をノミネートしています!",
     "Nomination.Notification.Failure.AlreadyNominatedByAdmin": "{lime}{0}{default} は既に管理者によってノミネートされています!",
     "Nomination.Notification.Failure.SameMap": "現在プレイ中のマップをノミネートすることはできません!",
+    "Nomination.Notification.Failure.SameMapGroup": "{lime}{0}{default} は現在のマップと同じグループのためノミネートできません!",
     "Nomination.Notification.Failure.GroupLimitReached": "同一グループのノミネート制限に達しました!",
     "Nomination.Notification.Failure.Generic.WithMapName": "{lime}{0}{default} のノミネートに失敗しました",
     "Nomination.Notification.Failure.CancelledByExternalPlugin": "ノミネートがブロックされました",

@@ -67,6 +67,9 @@ internal sealed class NominationValidateService
         if (IsMapInNominationCooldown(mapConfig))
             result.Add(NominationCheckResult.NominationCooldownActive);
 
+        if (SharesCooldownGroupWithCurrentMap(mapConfig))
+            result.Add(NominationCheckResult.SameMapGroup);
+
         if (result.Count > 0)
             return result;
 
@@ -175,6 +178,9 @@ internal sealed class NominationValidateService
         if (IsMapInCooldown(mapConfig))
             result.Add(NominationCheckResult.MapIsInCooldown);
 
+        if (SharesCooldownGroupWithCurrentMap(mapConfig))
+            result.Add(NominationCheckResult.SameMapGroup);
+
         if (!IsLowerThanMaxPlayers(mapConfig))
             result.Add(NominationCheckResult.TooMuchPlayers);
 
@@ -231,12 +237,23 @@ internal sealed class NominationValidateService
                 mapsInCooldown.Add(resolved.MapName);
         }
 
+        var currentMapCooldownGroups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (ResolveCurrentMapConfig() is { } currentConfig)
+        {
+            foreach (IMapGroupConfig group in currentConfig.GroupSettings)
+            {
+                if (HasCooldownConfigured(group))
+                    currentMapCooldownGroups.Add(group.GroupName);
+            }
+        }
+
         return new PickupSnapshot(
             CurrentMapName: _mapTransitionManager.CurrentMap?.MapConfig.MapName ?? SharedSystem.GetModSharp().GetMapName(),
             RealPlayerCount: SharedSystem.GetModSharp().GetIServer().GetGameClients(true).Count(u => !u.IsFakeClient && !u.IsHltv),
             NominatedMapNames: nominatedMapNames,
             GroupNominatedCounts: groupNominatedCounts,
-            MapsInCooldown: mapsInCooldown
+            MapsInCooldown: mapsInCooldown,
+            CurrentMapCooldownGroups: currentMapCooldownGroups
         );
     }
 
@@ -292,6 +309,12 @@ internal sealed class NominationValidateService
         if (snapshot.MapsInCooldown.Contains(mapConfig.MapName))
             return false;
 
+        foreach (IMapGroupConfig groupSetting in mapConfig.GroupSettings)
+        {
+            if (snapshot.CurrentMapCooldownGroups.Contains(groupSetting.GroupName))
+                return false;
+        }
+
         if (mapConfig.NominationConfig.MaxPlayers > 0
             && mapConfig.NominationConfig.MaxPlayers < snapshot.RealPlayerCount)
             return false;
@@ -318,7 +341,8 @@ internal sealed class NominationValidateService
         int RealPlayerCount,
         IReadOnlySet<string> NominatedMapNames,
         IReadOnlyDictionary<string, int> GroupNominatedCounts,
-        IReadOnlySet<string> MapsInCooldown);
+        IReadOnlySet<string> MapsInCooldown,
+        IReadOnlySet<string> CurrentMapCooldownGroups);
 
     public bool IsDuringVotingPeriod()
     {
@@ -386,6 +410,54 @@ internal sealed class NominationValidateService
     public bool IsMapInCooldown(IMapConfig mapConfig)
     {
         return GetCooldownInformations(mapConfig).HasCooldown;
+    }
+
+    public bool SharesCooldownGroupWithCurrentMap(IMapConfig mapConfig)
+    {
+        var currentConfig = ResolveCurrentMapConfig();
+        if (currentConfig is null)
+            return false;
+
+        // The current map itself is IsCurrentMap's responsibility — reporting
+        // it as a group conflict would mask the more precise SameMap result.
+        if (currentConfig.MapName.Equals(mapConfig.MapName, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        foreach (IMapGroupConfig group in mapConfig.GroupSettings)
+        {
+            if (!HasCooldownConfigured(group))
+                continue;
+
+            foreach (IMapGroupConfig currentGroup in currentConfig.GroupSettings)
+            {
+                if (group.GroupName.Equals(currentGroup.GroupName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Group cooldowns are written to the store only at map end, so while a map
+    // is being played its groups look cooldown-free. Conflict detection must
+    // therefore look at the configured values, not the runtime store.
+    private static bool HasCooldownConfigured(IMapGroupConfig group)
+    {
+        return group.CooldownSettings.ConfigCooldown > 0
+               || group.CooldownSettings.TimedCooldown > TimeSpan.Zero;
+    }
+
+    private IMapConfig? ResolveCurrentMapConfig()
+    {
+        if (_mapTransitionManager.CurrentMap is not null)
+            return _mapTransitionManager.CurrentMap.MapConfig;
+
+        var liveMapName = SharedSystem.GetModSharp().GetMapName();
+        if (liveMapName is null)
+            return null;
+
+        var mapConfigProvider = _serviceProvider.GetRequiredService<IMcsMapConfigProvider>();
+        return mapConfigProvider.TryGetMapConfig(liveMapName, out var found) ? found : null;
     }
 
     public bool IsPlayerInNominationCooldown(ulong steamId)

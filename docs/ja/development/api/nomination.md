@@ -76,6 +76,7 @@
 | `IsGreaterThanMinPlayers(IMapConfig)` | `bool` | 現在のプレイヤー数が最小人数以上か |
 | `IsLowerThanMaxPlayers(IMapConfig)` | `bool` | 現在のプレイヤー数が最大人数以下か |
 | `IsMapInCooldown(IMapConfig)` | `bool` | マップがクールダウン中か |
+| `SharesCooldownGroupWithCurrentMap(IMapConfig)` | `bool` | 現在プレイ中のマップと、クールダウン設定 (`Cooldown` > 0 または `CooldownDateTime`) のあるグループを共有しているか。現在マップ自身に対しては `false` (`IsCurrentMap` の担当) |
 | `IsMapInNominationCooldown(IMapConfig)` | `bool` | マップがノミネーション専用クールダウン中か |
 | `IsPlayerInNominationCooldown(ulong)` | `bool` | プレイヤー (SteamID) がプレイヤー単位のノミネーションクールダウン中か |
 | `GetPlayerCooldownState(ulong)` | `IPlayerNominationCooldownState?` | プレイヤーのノミネーションクールダウン状態を返す。クールダウン中でなければ `null` |
@@ -173,6 +174,7 @@ MCS のクールダウンには 2 つの軸があります:
 | `CancelledByExternalPlugin` | 外部プラグインのイベントリスナーによりキャンセルされた |
 | `ProhibitAdminNomination` | マップ設定で管理者ノミネーションが禁止されている |
 | `PlayerCooldownActive` | プレイヤーがプレイヤー単位のノミネーションクールダウン中 |
+| `SameMapGroup` | 現在プレイ中のマップとクールダウン設定のあるグループを共有している |
 
 ---
 

@@ -240,6 +240,10 @@ internal sealed class McsNominationController(IServiceProvider serviceProvider, 
             case NominationCheckResult.PlayerCooldownActive:
                 PrintMessageToServerOrPlayerChat(player, LocalizeWithModulePrefix(player, "Nomination.Notification.Failure.PlayerCooldownActive"));
                 break;
+
+            case NominationCheckResult.SameMapGroup:
+                PrintMessageToServerOrPlayerChat(player, LocalizeWithModulePrefix(player, "Nomination.Notification.Failure.SameMapGroup", mapDisplay));
+                break;
         }
     }
 

@@ -82,6 +82,7 @@
     "Nomination.Notification.Failure.AlreadyNominatedSameMap": "You have already nominated {lime}{0}{default}!",
     "Nomination.Notification.Failure.AlreadyNominatedByAdmin": "{lime}{0}{default} is already nominated by admin!",
     "Nomination.Notification.Failure.SameMap": "You cannot nominate the currently playing map!",
+    "Nomination.Notification.Failure.SameMapGroup": "{lime}{0}{default} is in the same group as the current map and cannot be nominated!",
     "Nomination.Notification.Failure.GroupLimitReached": "Group nomination limit reached!",
     "Nomination.Notification.Failure.Generic.WithMapName": "Failed to nominate {lime}{0}{default}",
     "Nomination.Notification.Failure.CancelledByExternalPlugin": "Nomination was blocked",
