@@ -211,11 +211,11 @@ internal sealed class McsMapTransitionManager : IMcsInternalMapTransitionManager
 
         _suppressConVarGuard?.Invoke();
         var cvm = _sharedSystem.GetConVarManager();
-        cvm.FindConVar("mp_timelimit")?.Set(99999999.0f);
+        cvm.FindConVar("mp_timelimit")?.Set(99999f);
         cvm.FindConVar("mp_maxrounds")?.Set(99999999);
         _matchLimitsForced = false;
         _resumeConVarGuard?.Invoke();
-        _logger.LogInformation("[MapTransition] Restored mp_timelimit=99999999, mp_maxrounds=99999999");
+        _logger.LogInformation("[MapTransition] Restored mp_timelimit=99999, mp_maxrounds=99999999");
     }
 
     private void FireIntermissionEvent()

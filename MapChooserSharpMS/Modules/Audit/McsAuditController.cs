@@ -163,7 +163,7 @@ internal sealed class McsAuditController
                 _ => "none"
             };
 
-            // MapCycle sets mp_timelimit/mp_maxrounds to 99999999 during the same
+            // MapCycle sets mp_timelimit/mp_maxrounds to sentinel values during the same
             // activate phase, so reading the ConVars here is listener-order-dependent.
             // Derive the configured limit from the map config instead.
             configuredTimelimit = timelimitType switch

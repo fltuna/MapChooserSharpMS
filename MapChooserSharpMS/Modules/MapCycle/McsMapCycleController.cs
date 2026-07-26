@@ -487,7 +487,9 @@ internal sealed class McsMapCycleController
                 return;
         }
 
-        cvm.FindConVar("mp_timelimit")?.Set(99999999.0f);
+        // 99999f: large enough sentinel that still fits float precision and
+        // formats in fixed notation ("99999", not "1e+08") on every platform.
+        cvm.FindConVar("mp_timelimit")?.Set(99999f);
         cvm.FindConVar("mp_maxrounds")?.Set(99999999);
         cvm.FindConVar("mp_match_end_changelevel")?.Set(0);
 
@@ -579,7 +581,7 @@ internal sealed class McsMapCycleController
             return;
 
         Logger.LogWarning(
-            "[MapCycle] External change detected on {Name} — will restore to 99999999 next frame",
+            "[MapCycle] External change detected on {Name} — will restore sentinel next frame",
             conVar.Name);
 
         SharedSystem.GetModSharp().InvokeFrameAction(() =>
@@ -590,8 +592,14 @@ internal sealed class McsMapCycleController
             _conVarGuardSuppressed = true;
             try
             {
-                conVar.Set(99999999);
-                Logger.LogInformation("[MapCycle] Restored {Name} to 99999999", conVar.Name);
+                // ConVarVariantValue is a union: Set(int) on a Float32 ConVar
+                // reinterprets the int bits as float (99999999 -> 2.3e-35),
+                // so the overload must match the ConVar's type.
+                if (conVar.Type is ConVarType.Float32 or ConVarType.Float64)
+                    conVar.Set(99999f);
+                else
+                    conVar.Set(99999999);
+                Logger.LogInformation("[MapCycle] Restored {Name} to sentinel value", conVar.Name);
             }
             finally
             {
