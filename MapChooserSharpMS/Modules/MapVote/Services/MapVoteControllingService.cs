@@ -373,6 +373,8 @@ internal sealed class MapVoteControllingService : IMapVoteControllingService
     /// <summary>
     /// Phase 1 (game thread): placeholder option + admin/community nomination
     /// candidates. Synchronous, unchanged from the pre-deferred implementation.
+    /// NominationVoteSlotService mirrors this pick order/capacity for !nomlist
+    /// and the overflow notification — keep both in sync.
     /// </summary>
     private (List<IMapVoteOption> Candidates, HashSet<string> UsedMapNames, int SlotsForMaps) BuildNominatedCandidates(
         bool isRtvVote, int maxElements)

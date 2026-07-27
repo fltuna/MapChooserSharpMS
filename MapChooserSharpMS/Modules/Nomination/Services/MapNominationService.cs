@@ -82,6 +82,8 @@ internal sealed class MapNominationService(
 
         ApplyPlayerNominationCooldown(nominator.SteamId);
 
+        nominationController.NotifyVoteSlotOverflow();
+
         return [];
     }
 
@@ -130,6 +132,8 @@ internal sealed class MapNominationService(
             ((McsNominationData)nomination).Participants.Add(nominator.Slot);
 
         nominationController.BroadcastAdminNomination(nominator, mapConfig, changedExistingToAdmin: existing != null);
+
+        nominationController.NotifyVoteSlotOverflow();
 
         return [];
     }

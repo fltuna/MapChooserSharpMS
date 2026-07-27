@@ -79,6 +79,7 @@ internal sealed class McsNominationController(IServiceProvider serviceProvider, 
         services.AddSingleton<INominationManager>(_ => _internalNominationManager);
         services.AddSingleton<INominationValidateService>(_ => NominationValidateService);
         services.AddSingleton<IMapNominationService>(_ => NominationService);
+        services.AddSingleton<NominationVoteSlotService>();
     }
 
     protected override void OnInitialize()
@@ -279,6 +280,33 @@ internal sealed class McsNominationController(IServiceProvider serviceProvider, 
         PrintLocalizedChatToAllWithModulePrefix(
             "Nomination.Broadcast.Admin.RemovedNomination",
             executor?.Name ?? "Console", mapDisplay);
+    }
+
+    public void NotifyVoteSlotOverflow()
+    {
+        var slotService = ServiceProvider.GetRequiredService<NominationVoteSlotService>();
+        if (!slotService.IsOverflowing())
+            return;
+
+        var clientManager = SharedSystem.GetClientManager();
+        var notifiedSlots = new HashSet<int>();
+
+        foreach (var nomination in _internalNominationManager.NominatedMaps.Values)
+        {
+            foreach (int slot in nomination.NominationParticipants)
+            {
+                if (!notifiedSlots.Add(slot))
+                    continue;
+
+                var client = clientManager.GetGameClient(new Sharp.Shared.Units.PlayerSlot((byte)slot));
+                var controller = client?.GetPlayerController();
+                if (client is null || controller is null)
+                    continue;
+
+                controller.PrintToChat(LocalizeWithModulePrefix(client, "Nomination.Broadcast.VoteSlotOverflow.PickRule"));
+                controller.PrintToChat(LocalizeWithModulePrefix(client, "Nomination.Broadcast.VoteSlotOverflow.HowToCancel"));
+            }
+        }
     }
 
 }

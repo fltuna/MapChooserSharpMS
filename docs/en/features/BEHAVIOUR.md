@@ -70,6 +70,8 @@ Notes:
 - Override events always receive the **unfiltered** list (e.g. `OnNominatedMapPick` sees all community nominations before the `MinNominationCountForVote` filter). An override replaces the default filtering entirely — the returned list is used as-is with no further checks.
 - All pick events fire synchronously on the game thread. Only the eligibility filter of the built-in random pick runs on a worker thread.
 - Nominations that do not make it into the final candidate list are recorded in the audit as `not_picked` (see [Audit System](AUDIT.md)).
+- `!nomlist` mirrors this pick order and shows a separator line above the entries that would not make it into the vote (over capacity or below `MinNominationCountForVote`). Pick-override events cannot be predicted and are not reflected.
+- Whenever a nomination succeeds while the nomination count exceeds the available map slots (`MaxMenuElements`, minus one for the *Extend* option while the extend budget remains), every current nominator is notified in chat that maps are picked by nomination count and that `!unnom` cancels their nomination.
 
 ## Vote Menu Layout
 

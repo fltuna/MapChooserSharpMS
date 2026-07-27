@@ -95,6 +95,8 @@
     "Nomination.Broadcast.Admin.Nominated": "Admin {0} inserted {lime}{1}{default} into nomination",
     "Nomination.Broadcast.Admin.ChangedToAdminNomination": "Admin {0} changed {lime}{1}{default} to admin nomination",
     "Nomination.Broadcast.Admin.RemovedNomination": "Admin {0} removed {lime}{1}{default} from nomination",
+    "Nomination.Broadcast.VoteSlotOverflow.PickRule": "There are more nominations than vote slots! Maps are picked by nomination count ({lime}!nomlist{default} order = pick order)",
+    "Nomination.Broadcast.VoteSlotOverflow.HowToCancel": "To cancel your nomination, run {lime}!unnom{default}",
     "Nomination.Command.Notification.NotMapsFound": "No map(s) found matching {lime}{0}{default}",
     "Nomination.Command.Notification.MultipleResult": "{lime}{0}{default} maps found matching {lime}{1}{default}",
     "Nomination.Command.Notification.Usage": "Usage: !nominate <MapName>",
@@ -105,6 +107,7 @@
     "NominationList.Command.Notification.ListHeader": "Nomination List",
     "NominationList.Command.Notification.VoteCount": "{blue}{0}{default} votes",
     "NominationList.Command.Notification.AdminNomination": "{red}Admin nomination{default}",
+    "NominationList.Command.Notification.NotIncludedSeparator": "{red}===== ↓ WILL NOT BE INCLUDED IN VOTE ↓ ====={default}",
 
     "Vote.Option.ExtendMap": "Extend Current Map",
     "Vote.Option.DontChange": "Don't Change",

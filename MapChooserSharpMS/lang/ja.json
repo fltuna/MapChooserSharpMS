@@ -95,6 +95,8 @@
     "Nomination.Broadcast.Admin.Nominated": "管理者 {0} が {lime}{1}{default} をノミネーションに追加しました",
     "Nomination.Broadcast.Admin.ChangedToAdminNomination": "管理者 {0} が {lime}{1}{default} を管理者ノミネーションに変更しました",
     "Nomination.Broadcast.Admin.RemovedNomination": "管理者 {0} が {lime}{1}{default} をノミネーションから削除しました",
+    "Nomination.Broadcast.VoteSlotOverflow.PickRule": "ノミネート数が投票枠を超えています! 投票マップはノミネート数の多い順に選出されます ({lime}!nomlist{default} の表示順 = 選出順)",
+    "Nomination.Broadcast.VoteSlotOverflow.HowToCancel": "ノミネートを取り消す場合は {lime}!unnom{default} を実行してください",
     "Nomination.Command.Notification.NotMapsFound": "{lime}{0}{default} にマッチするマップは見つかりませんでした",
     "Nomination.Command.Notification.MultipleResult": "{lime}{1}{default} にマッチする {lime}{0}{default} 個のマップが見つかりました",
     "Nomination.Command.Notification.Usage": "使い方: !nominate <マップ名>",
@@ -105,6 +107,7 @@
     "NominationList.Command.Notification.ListHeader": "ノミネーションリスト",
     "NominationList.Command.Notification.VoteCount": "{blue}{0}{default} 票",
     "NominationList.Command.Notification.AdminNomination": "{red}管理者ノミネート{default}",
+    "NominationList.Command.Notification.NotIncludedSeparator": "{red}===== ↓ 投票には選出されません ↓ ====={default}",
 
     "Vote.Option.ExtendMap": "現在のマップを延長",
     "Vote.Option.DontChange": "変更しない",

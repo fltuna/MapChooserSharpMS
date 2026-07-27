@@ -18,4 +18,11 @@ internal interface IMcsInternalNominationController: IMcsNominationController
     void BroadcastAdminNomination(IGameClient? executor, IMapConfig mapConfig, bool changedExistingToAdmin);
 
     void BroadcastNominationRemoved(IGameClient? executor, IMapConfig mapConfig);
+
+    /// <summary>
+    /// When nominations exceed the available vote slots, tells every current
+    /// nominator that maps are picked by nomination count and how to cancel.
+    /// No-op while everything still fits.
+    /// </summary>
+    void NotifyVoteSlotOverflow();
 }

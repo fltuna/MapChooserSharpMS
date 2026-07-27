@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using MapChooserSharpMS.Modules.Nomination.Interfaces;
+using MapChooserSharpMS.Modules.Nomination.Services;
 using MapChooserSharpMS.Shared.MapConfig;
 using MapChooserSharpMS.Shared.MapConfig.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,29 +44,45 @@ internal sealed class NomListCommand(IServiceProvider provider) : NominationComm
         client.GetPlayerController()?.PrintToChat(
             LocalizeWithNominationPrefix(client, "NominationList.Command.Notification.ListHeader"));
 
+        // Entries are listed in the exact order maps are picked into the vote;
+        // nominations that would not make it appear below the separator.
+        var slotService = ServiceProvider.GetRequiredService<NominationVoteSlotService>();
+        var (included, excluded) = slotService.SplitByPickOrder();
+
         int index = 1;
-        foreach (var (_, nomination) in nominations)
+        foreach (var nomination in included)
+            PrintNomination(client, nomination, isVerbose, index++);
+
+        if (excluded.Count > 0)
         {
-            string mapDisplay = _toolingService.ResolveMapDisplayName(nomination.MapConfig);
-
-            string info;
-            if (nomination.IsForceNominated)
-            {
-                info = Plugin.LocalizeStringForPlayer(client, "NominationList.Command.Notification.AdminNomination");
-            }
-            else if (isVerbose)
-            {
-                info = BuildVerboseNominators(nomination);
-            }
-            else
-            {
-                info = Plugin.LocalizeStringForPlayer(client, "NominationList.Command.Notification.VoteCount", nomination.NominationParticipants.Count);
-            }
-
             client.GetPlayerController()?.PrintToChat(
-                $" {Plugin.GetPluginPrefix(client)} {index}: {mapDisplay} | {info}");
-            index++;
+                LocalizeWithNominationPrefix(client, "NominationList.Command.Notification.NotIncludedSeparator"));
+
+            foreach (var nomination in excluded)
+                PrintNomination(client, nomination, isVerbose, index++);
         }
+    }
+
+    private void PrintNomination(IGameClient client, Shared.Nomination.IMcsNominationData nomination, bool isVerbose, int index)
+    {
+        string mapDisplay = _toolingService.ResolveMapDisplayName(nomination.MapConfig);
+
+        string info;
+        if (nomination.IsForceNominated)
+        {
+            info = Plugin.LocalizeStringForPlayer(client, "NominationList.Command.Notification.AdminNomination");
+        }
+        else if (isVerbose)
+        {
+            info = BuildVerboseNominators(nomination);
+        }
+        else
+        {
+            info = Plugin.LocalizeStringForPlayer(client, "NominationList.Command.Notification.VoteCount", nomination.NominationParticipants.Count);
+        }
+
+        client.GetPlayerController()?.PrintToChat(
+            $" {Plugin.GetPluginPrefix(client)} {index}: {mapDisplay} | {info}");
     }
 
     private string BuildVerboseNominators(Shared.Nomination.IMcsNominationData nomination)
