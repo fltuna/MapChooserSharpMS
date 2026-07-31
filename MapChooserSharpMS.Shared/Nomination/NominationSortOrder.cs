@@ -8,4 +8,6 @@ public enum NominationSortOrder
     CooldownDescending,
     TimedCooldownAscending,
     TimedCooldownDescending,
+    TagAscending,
+    TagDescending,
 }

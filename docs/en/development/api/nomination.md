@@ -201,6 +201,32 @@ Enum specifying the sort order for map lists in nomination menus and similar con
 | `CooldownDescending` | Count-based cooldown descending (most remaining first) |
 | `TimedCooldownAscending` | Timed cooldown ascending (soonest expiration first) |
 | `TimedCooldownDescending` | Timed cooldown descending (latest expiration first) |
+| `TagAscending` | Smallest search tag ascending (A to Z). Maps without tags are placed last |
+| `TagDescending` | Smallest search tag descending (Z to A). Maps without tags are placed last |
+
+---
+
+## McsMapListSorter
+
+Static helper that sorts map lists by a `NominationSortOrder`. Used by MCS core to apply the
+default order (map name ascending) when building nomination menus, and available to menu compat
+plugins for player-selected sort orders.
+
+**Namespace**: `MapChooserSharpMS.Shared.Nomination`
+
+```csharp
+public static List<T> Sort<T>(
+    IEnumerable<T> source,
+    Func<T, IMapConfig> configSelector,
+    NominationSortOrder order,
+    IMapCooldownQueryService cooldownQueryService)
+```
+
+- Returns a new sorted list; the source is never mutated.
+- Non-alphabetical orders tie-break by map name ascending.
+- Cooldown-based orders use `IMapCooldownQueryService.GetCurrentCooldowns()` (in-memory only).
+- Tag orders use the alphabetically smallest tag of each map as the key; maps without tags always sort last.
+- String comparison is ordinal, case-insensitive.
 
 ---
 

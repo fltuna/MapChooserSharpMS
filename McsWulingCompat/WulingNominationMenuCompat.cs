@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MapChooserSharpMS.Shared.Nomination;
 using MapChooserSharpMS.Shared.Nomination.Services;
 using MapChooserSharpMS.Shared.Ui.Menu;
 using Sharp.Shared.Objects;
@@ -11,6 +12,16 @@ namespace McsWulingCompat;
 
 public sealed class WulingNominationMenuCompat(IMenu menu, IRegistry registry) : IMcsNominationMenuCompat
 {
+    private static readonly (string Label, NominationSortOrder Order)[] SortOptions =
+    [
+        ("Name (A → Z)", NominationSortOrder.AlphabeticalAscending),
+        ("Name (Z → A)", NominationSortOrder.AlphabeticalDescending),
+        ("Cooldown (Low → High)", NominationSortOrder.CooldownAscending),
+        ("Cooldown (High → Low)", NominationSortOrder.CooldownDescending),
+        ("Tag (A → Z)", NominationSortOrder.TagAscending),
+        ("Tag (Z → A)", NominationSortOrder.TagDescending),
+    ];
+
     private readonly Dictionary<int, IMenuInstance> _activeMenus = new();
 
     public INominationMenuManagementService NominationMenuService { get; set; } = null!;
@@ -21,17 +32,48 @@ public sealed class WulingNominationMenuCompat(IMenu menu, IRegistry registry) :
         if (player is null)
             return;
 
+        if (context.AllowSortSelection && context.Items.Count > 1)
+        {
+            ShowSortSelectionMenu(target, player, context);
+            return;
+        }
+
+        ShowMapListMenu(target, player, context, context.Items);
+    }
+
+    private void ShowSortSelectionMenu(IGameClient target, IPlayerEntry player, McsNominationMenuContext context)
+    {
+        var instance = menu.CreateMenu();
+        instance.Title = $"{context.Title} - Sort";
+
+        foreach (var (label, order) in SortOptions)
+        {
+            var capturedOrder = order;
+            instance.AddItem(MenuItemStyleFlags.Active | MenuItemStyleFlags.HasNumber, label,
+                (_, p, _, _) =>
+                {
+                    var sorted = McsMapListSorter.Sort(
+                        context.Items, i => i.MapConfig, capturedOrder, context.CooldownQueryService);
+                    ShowMapListMenu(target, p, context, sorted);
+                });
+        }
+
+        _activeMenus[target.Slot] = instance;
+        instance.DisplayToPlayer(player);
+    }
+
+    private void ShowMapListMenu(IGameClient target, IPlayerEntry player, McsNominationMenuContext context, IReadOnlyList<McsNominationMenuItem> items)
+    {
         var instance = menu.CreateMenu();
         instance.Title = context.Title;
 
-        foreach (var item in context.Items)
+        foreach (var item in items)
         {
             var capturedItem = item;
-            var capturedContext = context;
             instance.AddItem(MenuItemStyleFlags.Active | MenuItemStyleFlags.HasNumber, item.DisplayText,
                 (menuInstance, p, _, _) =>
                 {
-                    ShowDetailMenu(target, p, capturedItem, capturedContext);
+                    ShowDetailMenu(target, p, capturedItem, context);
                 });
         }
 

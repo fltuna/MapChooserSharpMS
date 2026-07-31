@@ -201,6 +201,32 @@ MCS のクールダウンには 2 つの軸があります:
 | `CooldownDescending` | 回数クールダウン降順 (残り多い順) |
 | `TimedCooldownAscending` | 時限クールダウン昇順 (終了が近い順) |
 | `TimedCooldownDescending` | 時限クールダウン降順 (終了が遠い順) |
+| `TagAscending` | 最小サーチタグ昇順 (A → Z)。タグなしマップは末尾 |
+| `TagDescending` | 最小サーチタグ降順 (Z → A)。タグなしマップは末尾 |
+
+---
+
+## McsMapListSorter
+
+マップ一覧を `NominationSortOrder` でソートする静的ヘルパーです。MCS コアがノミネーションメニュー構築時の
+デフォルト順 (マップ名昇順) の適用に使用するほか、メニュー互換プラグインがプレイヤー選択のソート順を
+適用する際にも利用できます。
+
+**名前空間**: `MapChooserSharpMS.Shared.Nomination`
+
+```csharp
+public static List<T> Sort<T>(
+    IEnumerable<T> source,
+    Func<T, IMapConfig> configSelector,
+    NominationSortOrder order,
+    IMapCooldownQueryService cooldownQueryService)
+```
+
+- ソート済みの新しいリストを返します。元のリストは変更しません。
+- マップ名以外のソートでは、同値時にマップ名昇順でタイブレークします。
+- クールダウン系ソートは `IMapCooldownQueryService.GetCurrentCooldowns()` (インメモリのみ) を使用します。
+- タグ系ソートは各マップの alphabetical 最小タグをキーにします。タグなしマップは常に末尾です。
+- 文字列比較は ordinal の大文字小文字無視です。
 
 ---
 

@@ -56,44 +56,48 @@ internal sealed class NominationMenuManagementService : INominationMenuManagemen
 
     public void ShowNominationMenu(IGameClient client, List<IMapConfig> configs)
     {
-        var compat = GetMenuCompatOrThrow();
-        var items = configs
-            .Select(c => CreateNominationMenuItem(c, isAdmin: false))
-            .ToList();
-
-        compat.ShowNominationMenu(client, BuildContext("Nominate Map", items));
+        ShowNominationMenuInternal(client, configs, isAdmin: false, allowSortSelection: false);
     }
 
     public void ShowNominationMenu(IGameClient client)
     {
-        var allMaps = _mapConfigProvider.GetMapConfigs()
-            .Select(kv => kv.Value.First().MapConfig)
-            .ToList();
-        ShowNominationMenu(client, allMaps);
+        ShowNominationMenuInternal(client, GetAllMaps(), isAdmin: false, allowSortSelection: true);
     }
 
     public void ShowAdminNominationMenu(IGameClient client, List<IMapConfig> configs)
     {
-        var compat = GetMenuCompatOrThrow();
-        var items = configs
-            .Select(c => CreateNominationMenuItem(c, isAdmin: true))
-            .ToList();
-
-        compat.ShowNominationMenu(client, BuildContext("Admin Nominate Map", items));
+        ShowNominationMenuInternal(client, configs, isAdmin: true, allowSortSelection: false);
     }
 
     public void ShowAdminNominationMenu(IGameClient client)
     {
-        var allMaps = _mapConfigProvider.GetMapConfigs()
+        ShowNominationMenuInternal(client, GetAllMaps(), isAdmin: true, allowSortSelection: true);
+    }
+
+    private void ShowNominationMenuInternal(IGameClient client, List<IMapConfig> configs, bool isAdmin, bool allowSortSelection)
+    {
+        var compat = GetMenuCompatOrThrow();
+        var items = McsMapListSorter
+            .Sort(configs, c => c, NominationSortOrder.AlphabeticalAscending, _cooldownQueryService)
+            .Select(c => CreateNominationMenuItem(c, isAdmin))
+            .ToList();
+
+        var title = isAdmin ? "Admin Nominate Map" : "Nominate Map";
+        compat.ShowNominationMenu(client, BuildContext(title, items, allowSortSelection));
+    }
+
+    private List<IMapConfig> GetAllMaps()
+    {
+        return _mapConfigProvider.GetMapConfigs()
             .Select(kv => kv.Value.First().MapConfig)
             .ToList();
-        ShowAdminNominationMenu(client, allMaps);
     }
 
     public void ShowRemoveNominationMenu(IGameClient client, List<IMcsNominationData> configs)
     {
         var compat = GetMenuCompatOrThrow();
-        var items = configs
+        var items = McsMapListSorter
+            .Sort(configs, n => n.MapConfig, NominationSortOrder.AlphabeticalAscending, _cooldownQueryService)
             .Select(n => new McsNominationMenuItem
             {
                 DisplayText = _toolingService.ResolveMapDisplayName(n.MapConfig),
@@ -154,12 +158,13 @@ internal sealed class NominationMenuManagementService : INominationMenuManagemen
         compat.ShowNominationMenu(client, BuildContext($"Nominate {item.DisplayText}?", [item]));
     }
 
-    private McsNominationMenuContext BuildContext(string title, List<McsNominationMenuItem> items)
+    private McsNominationMenuContext BuildContext(string title, List<McsNominationMenuItem> items, bool allowSortSelection = false)
     {
         return new McsNominationMenuContext
         {
             Title = title,
             Items = items,
+            AllowSortSelection = allowSortSelection,
             ToolingService = _toolingService,
             CooldownQueryService = _cooldownQueryService,
             NominationMenuService = this,

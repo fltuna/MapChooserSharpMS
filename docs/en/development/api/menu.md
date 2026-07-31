@@ -44,12 +44,14 @@ Context passed to `ShowNominationMenu`. Contains all data and services the compa
 | Property | Type | Description |
 |---|---|---|
 | `Title` | `string` | Menu title string |
-| `Items` | `IReadOnlyList<McsNominationMenuItem>` | List of nomination menu items |
+| `Items` | `IReadOnlyList<McsNominationMenuItem>` | List of nomination menu items, pre-sorted by map name ascending |
+| `AllowSortSelection` | `bool` | True when the compat may offer a sort-order selection (e.g. via `McsMapListSorter`) before showing the list. True for full map list menus; false for search results, confirmation and removal menus |
 | `ToolingService` | `IMapConfigToolingService` | Utilities for resolving display names, checking Workshop IDs, etc. |
 | `CooldownQueryService` | `IMapCooldownQueryService` | Query cooldown state for maps |
 | `NominationMenuService` | `INominationMenuManagementService` | Same service as the property on the compat interface |
 
-All properties are `required init`.
+All properties except `AllowSortSelection` (optional, defaults to `false`) are `required init`.
+Honoring `AllowSortSelection` is optional — a compat may simply display `Items` in the given order.
 
 ---
 

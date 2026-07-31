@@ -15,6 +15,13 @@ public sealed class McsNominationMenuContext
 
     public required IReadOnlyList<McsNominationMenuItem> Items { get; init; }
 
+    /// <summary>
+    /// True when the compat may offer a sort-order selection before showing the list
+    /// (full map list menus). False for search results, confirmation and removal menus —
+    /// those are always pre-sorted by map name ascending.
+    /// </summary>
+    public bool AllowSortSelection { get; init; }
+
     public required IMapConfigToolingService ToolingService { get; init; }
 
     public required IMapCooldownQueryService CooldownQueryService { get; init; }

@@ -44,12 +44,14 @@ MCS はメニュー描画をプラグイン本体から切り離した抽象レ�
 | プロパティ | 型 | 説明 |
 |---|---|---|
 | `Title` | `string` | メニューのタイトル文字列 |
-| `Items` | `IReadOnlyList<McsNominationMenuItem>` | ノミネーションメニュー項目のリスト |
+| `Items` | `IReadOnlyList<McsNominationMenuItem>` | ノミネーションメニュー項目のリスト (マップ名昇順でソート済み) |
+| `AllowSortSelection` | `bool` | 一覧表示前にソート順選択 (例: `McsMapListSorter` 使用) を提供してよい場合 true。全マップ一覧メニューで true、検索結果・確認・削除メニューでは false |
 | `ToolingService` | `IMapConfigToolingService` | 表示名の解決や Workshop ID の確認などのユーティリティ |
 | `CooldownQueryService` | `IMapCooldownQueryService` | マップのクールダウン状態を問い合わせるサービス |
 | `NominationMenuService` | `INominationMenuManagementService` | 互換インターフェースのプロパティと同じサービス |
 
-全プロパティは `required init` です。
+`AllowSortSelection` (省略可、デフォルト `false`) 以外の全プロパティは `required init` です。
+`AllowSortSelection` への対応は任意で、互換プラグインは渡された順で `Items` を表示するだけでも構いません。
 
 ---
 

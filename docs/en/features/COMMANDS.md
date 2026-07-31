@@ -17,7 +17,7 @@ Exactly one match executes the command immediately. Multiple matches open a sele
 
 | Command | Alias | Description |
 |---|---|---|
-| !nominate \<map\> | !nom | Nominate a map. Without arguments, shows the full map list. Partial match with multiple hits shows a menu |
+| !nominate \<map\> | !nom | Nominate a map. Without arguments, shows the full map list (with the Wuling menu, a sort-order selection — Name / Cooldown / Tag, each ascending or descending — is shown first). Partial match with multiple hits shows a menu sorted by map name |
 | !nomlist | - | Show the current nomination list in vote pick order (admin nominations first, then by nomination count). Entries that would not fit into the vote appear below a separator line. `!nomlist full` shows nominator names for admins |
 | !rtv | chat "rtv" | Vote for Rock The Vote |
 | !unnominate | !unnom | Remove your nomination |
